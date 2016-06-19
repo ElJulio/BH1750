@@ -23,7 +23,7 @@ def main():
 
     bus.write_byte_data(address,0x10,0)
     time.sleep(0.24)
-    print bus.read_byte_data(address,0x10)
+    bus.read_byte_data(address,0x10)
 
 if __name__ == "__main__":
     main()

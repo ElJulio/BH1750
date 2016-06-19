@@ -19,11 +19,11 @@ def read_word(addr):
 
 def main():
     #Wake up the BH170
-    bus.write_byte_data(address,0x1,0)
+    bus.write_byte(address,0x1)
 
-    bus.write_byte_data(address,0x10,0)
+    bus.write_byte(address,0x10)
     time.sleep(0.24)
-    bus.read_byte_data(address,0x10)
+    bus.read_byte(address,0x10)
 
 if __name__ == "__main__":
     main()

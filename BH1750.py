@@ -1,29 +1,35 @@
 #!/usr/bin/python
 
 import time
-import smbus
+import I2C
 
-#Address of the BH1750
-address = 0x23
-bus = smbus.SMBus(1)
 
-def read_byte(addr):
-    return bus.read_byte_data(address,addr)
+i2c = I2C.i2cMaster()
+i2c.init(100,17,27) #i2c speed  = 100kbit/s SDA = GPIO17 SCL = GPIO27
 
-def read_word(addr):
-    high = bus.read_byte_data(address,addr)
-    low = bus.read_byte_data(address,addr+1)
+def WriteByteData(addr,cmd):
+    i2c.Start()
+    i2c.WriteByte(addr)
+    i2c.WriteByte(cmd)
+    i2c.Stop()
+
+def ReadWord(addr):
+    i2c.Start()
+    i2c.WriteByte(addr)
+    high = i2c.ReadAck()
+    low = i2c.ReadNack()
+    i2c.Stop()
     val = (high << 8)+ low
     return val
 
+def RawToLux(raw):
+    return raw/1.2
 
 def main():
-    #Wake up the BH170
-    bus.write_byte(address,0x1)
+    WriteByteData(0x46,0x10)
+    time.sleep(0.024)
+    print RawToLux(ReadWord(0x47))
 
-    bus.write_byte(address,0x10)
-    time.sleep(0.24)
-    bus.read_byte(address)
 
 if __name__ == "__main__":
     main()
